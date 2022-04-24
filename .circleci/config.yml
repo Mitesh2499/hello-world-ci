@@ -29,7 +29,7 @@ jobs:
       
       
 workflows:
-  versions: 2
+  version: 2
   one_and_two:
     jobs:
       - one
