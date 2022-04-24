@@ -15,7 +15,13 @@ jobs:
     steps:
       - checkout
       - run: echo "A first Hello"
-      - run: sleep 25
+      - run: mkdir -p my_workspace_one
+      - run: echo "trying out workspace" > my_workspace_one/echo-output
+      - persist_to_workspace:
+        root: my_workspace_one
+        paths: 
+          - echo-output
+      
   two: 
     docker:
       - image: cimg/ruby:3.0.2
@@ -25,7 +31,15 @@ jobs:
     steps:
       - checkout
       - run: echo "A second Hello"
-      - run: sleep 25
+      - attach_workspace:
+        at: my_workspace_one
+      - run: |
+           if [[ $(cat my_workspace_one/echo-output) === "trying out workspace" ]]; then
+            echo "Worked";
+           else
+            echo "Nope"; exit 1
+           fi
+           
       
       
 workflows:
@@ -33,6 +47,8 @@ workflows:
   one_and_two:
     jobs:
       - one
-      - two
+      - two:
+        requires:
+          - one
       
  
