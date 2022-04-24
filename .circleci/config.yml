@@ -33,7 +33,7 @@ jobs:
       - run: echo "A second Hello"
       - attach_workspace:
           at: my_workspace_one
-      - run: |
+      - run: 
             if [[ $(cat my_workspace_one/echo-output) == "trying out workspace" ]]; then
             echo "Worked";
            else
