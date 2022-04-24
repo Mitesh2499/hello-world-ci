@@ -1,22 +1,38 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
-version: 2.1
+version: 2
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 
-orbs:
-  node: circleci/node@4.7.0
 jobs:
-  build:
-    executor:
-      name: node/default
-      tag: '10.4'
-    setps:
+  one: 
+    docker:
+      - image: cimg/ruby:2.6.8
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+    steps:
       - checkout
-      - node/with-cache:
-        steps:
-          - run: npm install
-      - run: npm run test
+      - run: echo "A first Hello"
+      - run: sleep 25
+  two: 
+    docker:
+      - image: cimg/ruby:3.0.2
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - checkout
+      - run: echo "A second Hello"
+      - run: sleep 25
+      
+      
+workflows:
+  versions: 2
+  one_and_two:
+    jobs:
+      - one
+      - two
       
  
